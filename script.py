@@ -4,7 +4,7 @@ import csv
 from io import StringIO
 
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1GgVMznHo-9N4vAwqIyjVgdC4yYqENQxQ0wXx3JyNdfg/export?format=csv"
-CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAQA-RWdiRo/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Q80CR6-bCSu2z6U6Ulj6l2tLpSrcTMA0S0_yAL8vkX4"
+CHAT_WEBHOOK_URL = os.getenv("https://chat.googleapis.com/v1/spaces/AAQA-RWdiRo/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Q80CR6-bCSu2z6U6Ulj6l2tLpSrcTMA0S0_yAL8vkX4")
 
 def get_urls():
     res = requests.get(SHEET_CSV_URL)
