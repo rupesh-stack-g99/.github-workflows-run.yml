@@ -1,0 +1,49 @@
+import requests
+from bs4 import BeautifulSoup
+import csv
+from io import StringIO
+
+SHEET_CSV_URL = "PASTE_CSV_LINK_HERE"
+CHAT_WEBHOOK_URL = "PASTE_CHAT_WEBHOOK_HERE"
+
+def get_urls():
+    res = requests.get(SHEET_CSV_URL)
+    data = StringIO(res.text)
+    reader = csv.DictReader(data)
+
+    urls = []
+    for row in reader:
+        urls.append((row["Website Name"], row["URL"]))
+    return urls
+
+def check_h1(url):
+    try:
+        r = requests.get(url, timeout=10)
+        soup = BeautifulSoup(r.text, "html.parser")
+        return len(soup.find_all("h1"))
+    except:
+        return "Error"
+
+def send_alert(issues):
+    if not issues:
+        return
+
+    msg = "⚠️ H1 Issues:\n\n"
+    for i in issues:
+        msg += i + "\n"
+
+    requests.post(CHAT_WEBHOOK_URL, json={"text": msg})
+
+def main():
+    urls = get_urls()
+    issues = []
+
+    for name, url in urls:
+        count = check_h1(url)
+
+        if count != 1:
+            issues.append(f"{name} → {count} H1")
+
+    send_alert(issues)
+
+main()
